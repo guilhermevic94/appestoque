@@ -67,7 +67,7 @@ main{max-width:1000px;margin:0 auto;padding:14px 16px 110px}
 @keyframes sheet{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 .fbar{display:flex;gap:8px;align-items:flex-start;margin-bottom:10px}.fbar .chips{flex:1;min-width:0;margin:0}
-.fbar select{flex:none;border:1px solid var(--line2);background:var(--panel);color:var(--txt);border-radius:999px;padding:7px 10px;font-weight:600;max-width:140px}
+#sort{flex:none;border:1px solid var(--line2);background:var(--panel);color:var(--txt);border-radius:999px;padding:7px 10px;font-weight:600;max-width:140px}
 .hint{color:var(--mut);font-size:12.5px;margin:0 0 6px}
 .ar{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}.ar .ph{width:48px;height:48px}.ar .soft{flex:none}
 .soft.pin.on{background:var(--acc);color:#fff}.soft.pin.on svg{fill:currentColor}
@@ -75,7 +75,7 @@ main{max-width:1000px;margin:0 auto;padding:14px 16px 110px}
 .catbar{display:flex;gap:8px;align-items:center;margin-bottom:10px}
 .catbtn{flex:1;min-width:0;display:flex;align-items:center;gap:8px;border:1px solid var(--line2);background:var(--panel);border-radius:999px;padding:8px 14px;font-weight:600;text-align:left}
 .catbtn span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.catbtn.on{background:var(--soft);color:var(--acc);border-color:var(--acc)}
-.catbar .soft{flex:none;border-radius:999px;padding:8px 14px}
+.catbar .soft{flex:none;border-radius:999px;padding:0;width:36px;height:36px}.catbar #sort{flex:none;max-width:130px;height:36px}.catbtn{height:36px;padding:0 14px}
 .gh{margin-top:6px}.gb{background:transparent;border:0;font:inherit;font-weight:700;display:flex;gap:6px;align-items:center;padding:6px 0;width:100%;text-align:left}
 .gb svg{transition:transform .2s}.gb[aria-expanded=false] svg{transform:rotate(-90deg)}
 .crow{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);background:transparent;padding:12px 4px;font-weight:600}
@@ -92,13 +92,17 @@ html.locked body>*:not(#lock){display:none!important}
 .lbox label.rem{display:flex;gap:8px;align-items:center;justify-content:center;color:var(--mut);font-size:13px}
 .lerr{min-height:18px;color:var(--err);font-size:13px;margin:0}.lbox .lnk{background:none;border:0;color:var(--mut);font-size:13px;text-decoration:underline;padding:4px}
 .mfoot{flex-wrap:wrap}.mfoot .btn{min-width:130px}
-@media(max-width:480px){.hin{gap:6px;padding:10px}.ib{width:34px;height:34px}h1{font-size:17px}}
+@media(max-width:560px){.hin{flex-wrap:wrap;gap:8px 6px;padding:10px 12px}.hin h1{flex:1;font-size:18px}.ib{width:36px;height:36px}.search{order:5;flex:1 1 100%}main{padding-left:12px;padding-right:12px}}
+.lrow{display:grid;grid-template-columns:1fr 36px;gap:6px;margin-bottom:10px;padding-bottom:10px;border-bottom:1px dashed var(--line2)}
+.lrow .lu{grid-column:1/-1}.lrow .lx{width:36px;height:36px;padding:0;font-size:18px}.lrow input{width:100%;border:1px solid var(--line2);background:var(--panel);border-radius:10px;padding:9px 11px}
+.soft.mini{height:auto;min-height:0;padding:7px 14px;font-size:13px;border-radius:999px;width:auto}
+a.crow{text-decoration:none;color:inherit}
 </style></head><body>
 <header><div class="hin"><h1>Estoque</h1><input id="q" class="search" type="search" placeholder="Buscar produto" aria-label="Buscar produto"><button id="bLock" class="ib" aria-label="Senha do app"></button><button id="bSync" class="ib" aria-label="Sincronização"></button><button id="bHist" class="ib" aria-label="Histórico geral"></button><button id="bTheme" class="ib" aria-label="Alternar tema"></button></div></header>
 <main>
 <button id="alert" hidden><i class="d"></i><b id="alertTx"></b><span>Ver</span></button>
-<div class="fbar"><div id="fs" class="chips"></div><select id="sort" aria-label="Ordenar"><option value="name">A–Z</option><option value="low">Menor estoque</option><option value="mov">Última movimentação</option><option value="new">Mais recentes</option></select></div>
-<div id="catbar" class="catbar" hidden><button id="catBtn" class="catbtn"></button><button id="catClr" class="soft sq" aria-label="Limpar categoria" hidden>×</button><button id="colAll" class="soft sq" hidden></button></div>
+<div class="fbar"><div id="fs" class="chips"></div></div>
+<div id="catbar" class="catbar"><button id="catBtn" class="catbtn"></button><button id="catClr" class="soft sq" aria-label="Limpar categoria" hidden>×</button><button id="colAll" class="soft sq" hidden></button><select id="sort" aria-label="Ordenar"><option value="name">A–Z</option><option value="low">Menor estoque</option><option value="mov">Última movimentação</option><option value="new">Mais recentes</option></select></div>
 <div id="list"></div>
 </main>
 <div class="pill"><button id="bNew"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Novo produto</button></div>
@@ -113,7 +117,7 @@ html.locked body>*:not(#lock){display:none!important}
 <div class="two"><div class="field"><label for="pQty">Quantidade</label><input id="pQty" type="number" min="0" inputmode="numeric" value="0"></div>
 <div class="field"><label for="pMin">Avisar quando chegar em</label><input id="pMin" type="number" min="0" inputmode="numeric" value="5"></div></div>
 <div class="two"><div class="field"><label for="pCat">Categoria</label><input id="pCat" list="dl" maxlength="40" placeholder="Ex.: Canecas" autocomplete="off"><datalist id="dl"></datalist></div><div class="field"><label for="pSku">SKU (opcional)</label><input id="pSku" maxlength="30" autocomplete="off"></div></div>
-<div class="field"><label for="pUrl">Link de compra do fornecedor</label><input id="pUrl" inputmode="url" placeholder="https://" autocomplete="off"></div>
+<div class="field"><label>Links de compra (fornecedores)</label><div id="pLinks"></div><button type="button" class="soft mini" id="pAddLink">+ Adicionar fornecedor</button></div>
 </div>
 <div class="mfoot"><button class="btn del" id="pDel" hidden>Excluir</button><button class="btn" id="pSave">Salvar produto</button></div>
 </div></div>
@@ -143,6 +147,7 @@ html.locked body>*:not(#lock){display:none!important}
 <div class="field"><label for="wP1" id="wL1">Nova senha (mínimo 6 caracteres)</label><input id="wP1" type="password" autocomplete="new-password"></div>
 <div class="field"><label for="wP2">Repita a nova senha</label><input id="wP2" type="password" autocomplete="new-password"></div>
 </div><div class="mfoot"><button class="btn del" id="wRm" hidden>Remover senha</button><button class="btn sec" id="wNow" hidden>Bloquear agora</button><button class="btn" id="wSave">Salvar senha</button></div></div></div>
+<div id="mBuy" class="modal" hidden><div class="mbox" role="dialog" aria-modal="true"><div class="mhead"><span id="bTitle">Comprar</span><button data-close aria-label="Fechar">×</button></div><div class="mbody" id="bBody"></div></div></div>
 <div id="toast" role="status"></div>
 
 <script>
@@ -255,21 +260,32 @@ const CART='<path d="M6 6h15l-2 9H8zM6 6L5 3H2M9 20h.01M18 20h.01"/>';
 let tt;function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2600)}
 const status=p=>p.qty<=0?'out':p.qty<=p.min?'low':'ok';
 function cleanUrl(u){u=(u||'').trim();if(!u)return'';if(!/^https?:\/\//i.test(u))u='https://'+u;try{const x=new URL(u);return/^https?:$/.test(x.protocol)&&x.hostname.includes('.')?x.href:null}catch(e){return null}}
+const linksOf=p=>Array.isArray(p.links)?p.links:(p.links&&typeof p.links=='object'?Object.values(p.links):(p.url?[{n:'',u:p.url}]:[]));
+const hostOf=u=>{try{return new URL(u).hostname.replace(/^www\./,'')}catch(e){return u}};
+const lname=l=>l.n||hostOf(l.u);
+function buyBtn(p,cls){const L=linksOf(p);
+ if(!L.length)return'<span class="soft off'+cls+'" title="Sem link cadastrado">'+IC(CART)+'Sem link</span>';
+ if(L.length==1)return'<a class="soft buy'+cls+'" href="'+esc(L[0].u)+'" target="_blank" rel="noopener noreferrer">'+IC(CART)+'Comprar</a>';
+ return'<button class="soft buy'+cls+'" data-a="buy" data-id="'+p.id+'">'+IC(CART)+'Comprar · '+L.length+' fornecedores</button>'}
+function openBuy(p){$('bTitle').textContent=p.name;$('bBody').innerHTML=linksOf(p).map(l=>'<a class="crow" href="'+esc(l.u)+'" target="_blank" rel="noopener noreferrer"><span>'+esc(lname(l))+'</span>'+(l.n?'<small>'+esc(hostOf(l.u))+'</small>':'')+'</a>').join('');open('mBuy')}
+function addLinkRow(n,u){const d=document.createElement('div');d.className='lrow';d.innerHTML='<input class="ln" maxlength="30" placeholder="Fornecedor (ex.: Shopee)" aria-label="Nome do fornecedor" autocomplete="off"><button type="button" class="soft sq lx" aria-label="Remover fornecedor">×</button><input class="lu" inputmode="url" placeholder="https://" aria-label="Link de compra" autocomplete="off">';d.querySelector('.ln').value=n||'';d.querySelector('.lu').value=u||'';$('pLinks').appendChild(d);return d}
+$('pLinks').onclick=e=>{const x=e.target.closest('.lx');if(!x)return;const r=x.closest('.lrow');if($('pLinks').children.length>1)r.remove();else r.querySelectorAll('input').forEach(v=>v.value='')};
+$('pAddLink').onclick=()=>{if($('pLinks').children.length>=8)return toast('Máximo de 8 fornecedores.');addLinkRow().querySelector('.ln').focus()};
 function render(){
  const low=items.filter(p=>status(p)!='ok').length,cats=[...new Set(items.map(p=>p.cat).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR')),nocat=items.some(p=>!p.cat);
- const cnt={all:items.length,pin:items.filter(p=>p.pin).length,low,out:items.filter(p=>status(p)=='out').length,nolink:items.filter(p=>!p.url).length};
+ const cnt={all:items.length,pin:items.filter(p=>p.pin).length,low,out:items.filter(p=>status(p)=='out').length,nolink:items.filter(p=>!linksOf(p).length).length};
  if(cat&&cat!='-'&&!cats.includes(cat)||cat=='-'&&!nocat)cat='';
  $('alert').hidden=!low||filter=='low';$('alertTx').textContent=low+(low==1?' produto com estoque baixo':' produtos com estoque baixo');
  $('fs').innerHTML=[['all','Todos'],['pin','Fixados'],['low','Estoque baixo'],['out','Zerados'],['nolink','Sem link']].filter(([k])=>k=='all'||k=='low'||cnt[k]||filter==k).map(([k,t])=>'<button data-f="'+k+'" class="'+(filter==k?'on':'')+'">'+t+(k=='all'||cnt[k]?' ('+cnt[k]+')':'')+'</button>').join('');
- $('catbar').hidden=!cats.length;const cl=cat==''?'Todas as categorias':cat=='-'?'Sem categoria':cat;
+ $('catBtn').hidden=!cats.length;const cl=cat==''?'Todas as categorias':cat=='-'?'Sem categoria':cat;
  $('catBtn').className='catbtn'+(cat?' on':'');$('catBtn').innerHTML=IC('<path d="M20 12l-8 8-9-9V3h8zM7.5 7.5h.01"/>')+'<span>'+esc(cl)+'</span>'+IC('<path d="M6 9l6 6 6-6"/>');$('catClr').hidden=!cat;
  
- const okf={all:()=>true,pin:p=>p.pin,low:p=>status(p)!='ok',out:p=>status(p)=='out',nolink:p=>!p.url}[filter];
+ const okf={all:()=>true,pin:p=>p.pin,low:p=>status(p)!='ok',out:p=>status(p)=='out',nolink:p=>!linksOf(p).length}[filter];
  const last={};hist.forEach(h=>{if((h.type=='in'||h.type=='out')&&!last[h.pid])last[h.pid]=h.t});
  const nm=(a,b)=>a.name.localeCompare(b.name,'pt-BR');
  const cmp={name:(a,b)=>(a.cat||'\uffff').localeCompare(b.cat||'\uffff','pt-BR')||nm(a,b),low:(a,b)=>a.qty-b.qty||nm(a,b),new:(a,b)=>b.id-a.id,mov:(a,b)=>(last[b.id]||0)-(last[a.id]||0)||nm(a,b)}[sort];
- const L=items.filter(p=>okf(p)&&(!cat||(cat=='-'?!p.cat:p.cat==cat))&&(p.name+' '+(p.sku||'')).toLowerCase().includes(term)).sort((a,b)=>(b.pin?1:0)-(a.pin?1:0)||cmp(a,b));
- const catHead=sort=='name'&&!cat&&cats.length>0,hasPin=L.some(p=>p.pin);$('colAll').hidden=!(catHead||hasPin);$('colAll').textContent=col.size?'Expandir tudo':'Recolher tudo';
+ const L=items.filter(p=>okf(p)&&(!cat||(cat=='-'?!p.cat:p.cat==cat))&&(p.name+' '+(p.sku||'')+' '+linksOf(p).map(l=>l.n).join(' ')).toLowerCase().includes(term)).sort((a,b)=>(b.pin?1:0)-(a.pin?1:0)||cmp(a,b));
+ const catHead=sort=='name'&&!cat&&cats.length>0,hasPin=L.some(p=>p.pin);$('colAll').hidden=!(catHead||hasPin);$('colAll').innerHTML=IC(col.size?'<path d="M7 15l5 5 5-5M7 9l5-5 5 5"/>':'<path d="M7 20l5-5 5 5M7 4l5 5 5-5"/>');$('colAll').title=$('colAll').ariaLabel=col.size?'Expandir todos os grupos':'Recolher todos os grupos';
  const key=p=>p.pin?'\u0001':catHead?'c'+(p.cat||''):'\u0002',title=p=>p.pin?'Fixados':catHead?(p.cat||'Sem categoria'):'Demais produtos';
  let lk=null,out='';
  lastTitles=[...new Set(L.filter(p=>key(p)!='\u0002'||hasPin).map(title))];
@@ -278,14 +294,14 @@ function render(){
   const s=status(p),meta=[(!catHead||p.pin)&&p.cat?esc(p.cat):'',p.sku?'SKU '+esc(p.sku):''].filter(Boolean).join(' · ');
   out+='<article class="card '+s+'" data-id="'+p.id+'"><div class="top"><div class="ph">'+(p.img?'<img alt="" src="'+p.img+'">':BOX)+'</div><div class="inf"><b>'+esc(p.name)+'</b>'+(meta?'<span class="mut">'+meta+'</span>':'')
   +'<div class="qrow"><div class="stp"><button data-a="dec" aria-label="Tirar 1">−</button><input class="qin'+(flash==p.id?' bump':'')+'" type="number" min="0" inputmode="numeric" value="'+p.qty+'" aria-label="Quantidade de '+esc(p.name)+'"><button data-a="inc" aria-label="Adicionar 1">+</button></div>'+(s=='ok'?'':'<span class="bdg">'+(s=='out'?'Zerado':'Baixo')+'</span>')+'</div><span class="mut">Mínimo: '+p.min+'</span></div></div>'
-  +'<div class="row">'+(p.url?'<a class="soft buy grow" href="'+esc(p.url)+'" target="_blank" rel="noopener noreferrer">'+IC(CART)+'Comprar</a>':'<span class="soft off grow" title="Sem link cadastrado">'+IC(CART)+'Sem link</span>')
+  +'<div class="row">'+buyBtn(p,' grow')
   +'<button class="soft sq pin'+(p.pin?' on':'')+'" data-a="pin" aria-label="'+(p.pin?'Desafixar':'Fixar')+'" aria-pressed="'+!!p.pin+'">'+IC('<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>')+'</button>'
   +'<button class="soft sq" data-a="hist" aria-label="Histórico">'+IC('<path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5M12 7v5l3 2"/>')+'</button><button class="soft sq" data-a="edit" aria-label="Editar">'+IC('<path d="M4 20h4L19 9l-4-4L4 16zM13 7l4 4"/>')+'</button></div></article>'}
  $('list').innerHTML=out||'<div class="empty">'+(items.length?'Nenhum produto encontrado.':'Nenhum produto ainda. Toque em “Novo produto” para começar.')+'</div>';
  flash=null}
 /* popup de alertas ao abrir */
 function openAlert(){const A=items.filter(p=>status(p)!='ok').sort((a,b)=>a.qty-b.qty||a.name.localeCompare(b.name,'pt-BR'));if(!A.length)return;
- $('aBody').innerHTML=A.map(p=>'<div class="ar"><div class="ph">'+(p.img?'<img alt="" src="'+p.img+'">':BOX)+'</div><div class="inf"><b>'+esc(p.name)+'</b><span class="mut">'+(p.qty<=0?'Zerado':'Baixo: '+p.qty+' un')+' · mín. '+p.min+'</span></div>'+(p.url?'<a class="soft buy" href="'+esc(p.url)+'" target="_blank" rel="noopener noreferrer">'+IC(CART)+'Comprar agora</a>':'<span class="soft off">Sem link</span>')+'</div>').join('');
+ $('aBody').innerHTML=A.map(p=>'<div class="ar"><div class="ph">'+(p.img?'<img alt="" src="'+p.img+'">':BOX)+'</div><div class="inf"><b>'+esc(p.name)+'</b><span class="mut">'+(p.qty<=0?'Zerado':'Baixo: '+p.qty+' un')+' · mín. '+p.min+'</span></div>'+buyBtn(p,'')+'</div>').join('');
  open('mAlert')}
 $('aGo').onclick=()=>{filter='low';close();render()};
 const open=id=>{$(id).hidden=false},close=()=>{document.querySelectorAll('.modal').forEach(m=>m.hidden=true)};
@@ -297,11 +313,13 @@ function setQty(p,n){const old=p.qty,was=status(p);if(n==old)return render();p.q
  flash=p.id;render();const s=status(p);if(s=='out')toast(p.name+': estoque zerado!');else if(s=='low'&&was=='ok')toast('Atenção: '+p.name+' está com estoque baixo ('+p.qty+').')}
 $('list').onclick=e=>{const g=e.target.closest('[data-g]');if(g){const t=g.dataset.g;col.has(t)?col.delete(t):col.add(t);try{localStorage.setItem(CK,JSON.stringify([...col]))}catch(x){}return render()}
  const b=e.target.closest('[data-a]');if(!b)return;const p=items.find(x=>x.id==b.closest('.card').dataset.id),a=b.dataset.a;
+ if(a=='buy')return openBuy(p);
  if(a=='pin'){p.pin=!p.pin;p.u=Date.now();sv();render();return toast(p.pin?'Produto fixado no topo.':'Produto desafixado.')}
  a=='edit'?openProd(p.id):a=='hist'?openHist(p.id):a=='inc'?setQty(p,p.qty+1):p.qty>0&&setQty(p,p.qty-1)};
 $('list').addEventListener('change',e=>{const i=e.target.closest('.qin');if(!i)return;const p=items.find(x=>x.id==i.closest('.card').dataset.id),v=parseInt(i.value);isNaN(v)||v<0?render():setQty(p,v)});
 $('list').addEventListener('focusin',e=>{if(e.target.classList.contains('qin'))e.target.select()});
 $('list').addEventListener('keydown',e=>{if(e.key=='Enter'&&e.target.classList.contains('qin'))e.target.blur()});
+$('aBody').onclick=e=>{const b=e.target.closest('[data-a="buy"]');if(b){const p=items.find(x=>x.id==b.dataset.id);if(p)openBuy(p)}};
 /* histórico */
 const when=t=>new Date(t).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
 let hf='all',hpid=null;
@@ -323,19 +341,19 @@ $('pFile').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)
 $('pRm').onclick=()=>{photo=null;setPh()};
 /* produto */
 function openProd(id){editId=id||null;sure=false;const p=items.find(x=>x.id==id)||{name:'',qty:0,min:5,url:'',img:null,cat:cat&&cat!='-'?cat:''};
- $('pTitle').textContent=id?'Editar produto':'Novo produto';$('pName').value=p.name;$('pQty').value=p.qty;$('pMin').value=p.min;$('pUrl').value=p.url||'';$('pCat').value=p.cat||'';$('pSku').value=p.sku||'';photo=p.img||null;setPh();
+ $('pTitle').textContent=id?'Editar produto':'Novo produto';$('pName').value=p.name;$('pQty').value=p.qty;$('pMin').value=p.min;$('pLinks').innerHTML='';const L0=linksOf(p);(L0.length?L0:[{}]).forEach(l=>addLinkRow(l.n,l.u));$('pCat').value=p.cat||'';$('pSku').value=p.sku||'';photo=p.img||null;setPh();
  $('dl').innerHTML=[...new Set(items.map(x=>x.cat).filter(Boolean))].map(c=>'<option value="'+esc(c)+'">').join('');
  $('pDel').hidden=!id;$('pDel').textContent='Excluir';$('pDel').classList.remove('sure');open('mProd');$('pName').focus()}
 $('bNew').onclick=()=>openProd();
 $('pSave').onclick=()=>{const name=$('pName').value.trim();if(!name){toast('Digite o nome do produto.');return $('pName').focus()}
- const url=cleanUrl($('pUrl').value);if(url===null){toast('O link de compra não parece válido.');return $('pUrl').focus()}
+ const links=[];for(const r of $('pLinks').children){const n=r.querySelector('.ln').value.trim().slice(0,30),u=cleanUrl(r.querySelector('.lu').value);if(u===null){toast('O link'+(n?' de '+n:'')+' não parece válido.');return r.querySelector('.lu').focus()}if(u)links.push({n,u})}
  const qty=Math.max(0,parseInt($('pQty').value)||0),min=Math.max(0,parseInt($('pMin').value)||0);const sku=$('pSku').value.trim().slice(0,30);let c=$('pCat').value.trim().replace(/\s+/g,' ');
  const same=items.find(x=>x.cat&&x.cat.toLowerCase()==c.toLowerCase());if(same)c=same.cat;
  if(editId){const p=items.find(x=>x.id==editId),ch=[];
-  if(p.name!=name)ch.push('nome');if(p.min!=min)ch.push('mínimo');if((p.cat||'')!=c)ch.push('categoria');if((p.url||'')!=url)ch.push('link');if((p.sku||'')!=sku)ch.push('SKU');if((p.img||null)!==photo)ch.push('foto');
-  const old=p.qty;Object.assign(p,{name,qty,min,url,sku,cat:c,img:photo,u:Date.now()});
+  if(p.name!=name)ch.push('nome');if(p.min!=min)ch.push('mínimo');if((p.cat||'')!=c)ch.push('categoria');if(JSON.stringify(linksOf(p))!=JSON.stringify(links))ch.push('links de compra');if((p.sku||'')!=sku)ch.push('SKU');if((p.img||null)!==photo)ch.push('foto');
+  const old=p.qty;Object.assign(p,{name,qty,min,url:'',links,sku,cat:c,img:photo,u:Date.now()});
   if(ch.length)log(p,'edit',0,0,0,'Alterou: '+ch.join(', '));if(qty!=old)log(p,qty>old?'in':'out',qty-old,old,qty);flash=p.id}
- else{const p={id:Date.now(),name,qty,min,url,sku,cat:c,img:photo,u:Date.now()};items.push(p);log(p,'new',0,0,qty);flash=p.id}
+ else{const p={id:Date.now(),name,qty,min,url:'',links,sku,cat:c,img:photo,u:Date.now()};items.push(p);log(p,'new',0,0,qty);flash=p.id}
  if(!sv())return;close();render();toast('Produto salvo.')};
 $('pDel').onclick=()=>{if(!sure){sure=true;$('pDel').textContent='Confirmar exclusão';$('pDel').classList.add('sure');return}
  const p=items.find(x=>x.id==editId);log(p,'del',0,p.qty,0);del[p.id]=Date.now();items=items.filter(x=>x.id!=editId);sv();close();render();toast('Produto excluído.')};
